@@ -10,6 +10,7 @@ public interface FilmService {
                                Integer updatedFlickRating);
     public Filmography getFilmById(Integer filmId);
     public Filmography getFilmByFlickName(String flickName);
+    public void deleteFilmById(Integer filmId);
     public Iterable<Filmography> getAllFilms();
 
 }

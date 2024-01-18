@@ -51,6 +51,16 @@ public class FilmServiceImpl implements FilmService{
         return filmRepository.findByFlickName(flickName).orElse(null);
     }
 
+    public void deleteFilmById(Integer filmId)
+    {
+        if (filmRepository.findById(filmId).isPresent())
+        {
+            filmRepository.deleteById(filmId);
+            return;
+        }
+        System.out.println("Film ID doesn't exist");
+    }
+
     public Iterable<Filmography> getAllFilms()
     {
         return filmRepository.findAll();

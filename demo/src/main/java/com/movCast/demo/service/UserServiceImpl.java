@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
         {
             if (filmListingService.getFilm(newUser.getFavouriteFlick().getFilmName()).isEmpty())
             {
-                System.out.println("Favourite film is incorrect.");
+                System.out.println("Favourite film is incorrect."); 
                 return;
             }
             System.out.println("Film name: " + filmListingService.getFilm(newUser.getFavouriteFlick().getFilmName()));
