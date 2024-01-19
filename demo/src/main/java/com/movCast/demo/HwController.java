@@ -1,8 +1,11 @@
 package com.movCast.demo;
 
+import com.movCast.demo.dto.FilmListingDTO;
+import com.movCast.demo.dto.UserDTO;
 import com.movCast.demo.service.FilmListingService;
 import com.movCast.demo.service.FilmService;
 import com.movCast.demo.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +24,8 @@ public class HwController {
     private FilmListingService filmListingService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping(path = "/add")
     public String addNewFilm(@ModelAttribute("newFilm") Filmography newFilm)
@@ -45,8 +50,8 @@ public class HwController {
     @GetMapping(path = "/userDisplay")
     public void getAllUsers()
     {
-        Iterable<Films>films = filmListingService.getAllFilms();
-        for (Films currentFilm: films)
+        Iterable<FilmListingDTO>films = filmListingService.getAllFilms();
+        for (FilmListingDTO currentFilm: films)
         {
             System.out.println(currentFilm.getFilmName() + " favourited by " + currentFilm.getUserList().size() + " users");
             for (User currentUser: currentFilm.getUserList())
@@ -57,18 +62,19 @@ public class HwController {
     }
 
     @PostMapping(path = "/userAddition")
-    public void addUser(@RequestBody User newUser)
+    public void addUser(@RequestBody UserDTO userDTO)
     {
-        userService.addUser(newUser);
+        System.out.println("dto attributes " + userDTO.getUserName() + " " + userDTO.getFavouriteFlick());
+        userService.addUser(userDTO);
     }
 
     @PutMapping(path = "/userUpdate")
-    public void updateUser(@RequestBody User currentUser,
+    public void updateUser(@RequestBody UserDTO userDTO,
                            @RequestParam(value = "isNameChanging", defaultValue = "false") boolean nameChange,
                            @RequestParam(required = false, value = "newUserName") String newUserName,
                            @RequestParam(required = false, value = "newFavFlick") String newFavouriteFlick)
     {
-        userService.updateUser(currentUser, nameChange, newUserName, newFavouriteFlick);
+        userService.updateUser(userDTO, nameChange, newUserName, newFavouriteFlick);
     }
 
     @GetMapping(path = "/displaytable")

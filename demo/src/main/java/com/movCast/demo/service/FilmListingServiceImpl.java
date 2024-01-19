@@ -3,9 +3,12 @@ package com.movCast.demo.service;
 import com.movCast.demo.FilmListingRepository;
 import com.movCast.demo.Films;
 import com.movCast.demo.User;
+import com.movCast.demo.dto.FilmListingDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +17,8 @@ public class FilmListingServiceImpl implements FilmListingService {
 
     @Autowired
     FilmListingRepository filmListingRepository;
+    @Autowired
+    ModelMapper modelMapper;
 
 
     @Override
@@ -42,18 +47,27 @@ public class FilmListingServiceImpl implements FilmListingService {
 
     }
     @Override
-    public Optional<Films> getFilm(String filmName)
+    public Optional<FilmListingDTO> getFilm(String filmName)
     {
         if (filmListingRepository.findByFilmName(filmName).isPresent())
         {
-            return filmListingRepository.findByFilmName(filmName);
+            return Optional.of(modelMapper.map(filmListingRepository.findByFilmName(filmName), FilmListingDTO.class));
         }
         return Optional.empty();
     }
+
+
     @Override
-    public Iterable<Films> getAllFilms()
+    public Iterable<FilmListingDTO> getAllFilms()
     {
-        return filmListingRepository.findAll();
+        List<FilmListingDTO>currentFilmListings = new ArrayList<>();
+
+        for (Films films: filmListingRepository.findAll())
+        {
+            currentFilmListings.add(modelMapper.map(films, FilmListingDTO.class));
+        }
+
+        return currentFilmListings;
     }
     @Override
     public Iterable<User> getUserList(Films currentFilm)

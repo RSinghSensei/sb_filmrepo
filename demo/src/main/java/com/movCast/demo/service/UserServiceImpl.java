@@ -1,10 +1,15 @@
 package com.movCast.demo.service;
 
+import com.movCast.demo.Films;
 import com.movCast.demo.User;
 import com.movCast.demo.UserRepository;
+import com.movCast.demo.dto.UserDTO;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.util.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,18 +19,23 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     @Autowired
     FilmListingService filmListingService;
+    @Autowired
+    ModelMapper modelMapper;
+
     @Override
-    public void addUser(User newUser)
+    public void addUser(UserDTO userDTO)
     {
+        User newUser = modelMapper.map(userDTO, User.class);
+        System.out.println("new user fav flick: " + newUser.getFavouriteFlick());
         if (userRepository.findByUserName(newUser.getUsername()).isEmpty())
         {
             if (filmListingService.getFilm(newUser.getFavouriteFlick().getFilmName()).isEmpty())
             {
-                System.out.println("Favourite film is incorrect."); 
+                System.out.println("Favourite film is incorrect.");
                 return;
             }
             System.out.println("Film name: " + filmListingService.getFilm(newUser.getFavouriteFlick().getFilmName()));
-            newUser.setFavouriteFlick(filmListingService.getFilm(newUser.getFavouriteFlick().getFilmName()).get());
+//            newUser.setFavouriteFlick(filmListingService.getFilm(newUser.getFavouriteFlick().getFilmName()).get());
             userRepository.save(newUser);
         }
         else
@@ -36,8 +46,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user, boolean nameChange, String newUserName, String newFavouriteFlick)
+    public void updateUser(UserDTO userDTO, boolean nameChange, String newUserName, String newFavouriteFlick)
     {
+        User user = modelMapper.map(userDTO, User.class);
         // log
         System.out.println("namechangeval: " + " newusername: " + newUserName + " newfavflick: " + newFavouriteFlick);
 
@@ -60,19 +71,24 @@ public class UserServiceImpl implements UserService {
             System.out.println("New FavFlick does not exist in DB");
             return;
         }
-        currentUser.setFavouriteFlick(filmListingService.getFilm(newFavouriteFlick).get());
+//        currentUser.setFavouriteFlick(filmListingService.getFilm(newFavouriteFlick).get());
         userRepository.save(currentUser);
     }
 
     @Override
-    public User findUser(String userName)
+    public UserDTO findUser(String userName)
     {
-        return userRepository.findByUserName(userName).orElse(null);
+        return modelMapper.map(userRepository.findByUserName(userName).orElse(null), UserDTO.class);
     }
 
     @Override
-    public Iterable<User> getAllUsers()
+    public Iterable<UserDTO> getAllUsers()
     {
-        return userRepository.findAll();
+        List<UserDTO>currentUsersDTO = new ArrayList<>();
+        for (User user: userRepository.findAll())
+        {
+            currentUsersDTO.add(modelMapper.map(user, UserDTO.class));
+        }
+        return currentUsersDTO;
     }
 }
