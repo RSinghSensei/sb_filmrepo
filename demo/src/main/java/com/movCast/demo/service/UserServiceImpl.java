@@ -3,6 +3,7 @@ package com.movCast.demo.service;
 import com.movCast.demo.Films;
 import com.movCast.demo.User;
 import com.movCast.demo.UserRepository;
+import com.movCast.demo.dto.FilmListingDTO;
 import com.movCast.demo.dto.UserDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.util.Iterables;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
     public void addUser(UserDTO userDTO)
     {
         User newUser = modelMapper.map(userDTO, User.class);
-        System.out.println("new user fav flick: " + newUser.getFavouriteFlick());
+        System.out.println("new user " + newUser.getUsername() + " fav flick: " + newUser.getFavouriteFlick());
         if (userRepository.findByUserName(newUser.getUsername()).isEmpty())
         {
             if (filmListingService.getFilm(newUser.getFavouriteFlick().getFilmName()).isEmpty())
@@ -35,7 +36,12 @@ public class UserServiceImpl implements UserService {
                 return;
             }
             System.out.println("Film name: " + filmListingService.getFilm(newUser.getFavouriteFlick().getFilmName()));
-//            newUser.setFavouriteFlick(filmListingService.getFilm(newUser.getFavouriteFlick().getFilmName()).get());
+            // an extremely inefficient solution
+            // filmListingService works with DTO's, so in this case we're returning a DTO to a repository operation
+            // Another function perhaps?
+
+            Films userFavouriteFlick = filmListingService.getFilmObj(newUser.getFavouriteFlick().getFilmName()).get();
+            newUser.setFavouriteFlick(userFavouriteFlick);
             userRepository.save(newUser);
         }
         else
@@ -71,7 +77,7 @@ public class UserServiceImpl implements UserService {
             System.out.println("New FavFlick does not exist in DB");
             return;
         }
-//        currentUser.setFavouriteFlick(filmListingService.getFilm(newFavouriteFlick).get());
+        currentUser.setFavouriteFlick(filmListingService.getFilmObj(newFavouriteFlick).get());
         userRepository.save(currentUser);
     }
 

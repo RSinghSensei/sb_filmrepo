@@ -1,11 +1,15 @@
 package com.movCast.demo.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movCast.demo.User;
 
 import java.util.Set;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FilmListingDTO {
+    @JsonProperty("original_title")
     String filmName;
     Set<User> userList;
 

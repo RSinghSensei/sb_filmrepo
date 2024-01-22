@@ -68,6 +68,14 @@ public class HwController {
         userService.addUser(userDTO);
     }
 
+    @PostMapping(path = "/filmListAddition")
+    public void addFilm(@RequestBody FilmListingDTO filmListingDTO)
+    {
+        System.out.println("New Film Listing: " + filmListingDTO.getFilmName());
+        if (filmListingDTO.getFilmName() == null){System.out.println("film json incorrect"); return;}
+        filmListingService.saveNewFilm(filmListingDTO);
+    }
+
     @PutMapping(path = "/userUpdate")
     public void updateUser(@RequestBody UserDTO userDTO,
                            @RequestParam(value = "isNameChanging", defaultValue = "false") boolean nameChange,
@@ -109,6 +117,12 @@ public class HwController {
     {
         filmService.updateFilmById(filmId, film.getFlickName(), film.getFlickDirector(), film.getFlickRating());
         return "redirect:/demo/displaytable";
+    }
+
+    @GetMapping(path = "/viewFilmsFromAPI")
+    public void listFilmsFromAPI()
+    {
+        filmListingService.addNewFilmFromAPI();
     }
 
 }

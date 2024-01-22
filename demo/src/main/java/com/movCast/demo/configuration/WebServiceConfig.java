@@ -10,6 +10,8 @@ public class WebServiceConfig {
     @Bean
     public WebClient webclient()
     {
-        return WebClient.builder().build();
+        return WebClient.builder().
+                        baseUrl("https://api.themoviedb.org/3").
+                        build();
     }
 }
