@@ -13,6 +13,9 @@ public class FilmServiceImpl implements FilmService{
     @Autowired
     FilmRepository filmRepository;
 
+    public FilmServiceImpl() {
+    }
+
     public void addNewFilm(Filmography film)
     {
         film.setFlickRating(10);

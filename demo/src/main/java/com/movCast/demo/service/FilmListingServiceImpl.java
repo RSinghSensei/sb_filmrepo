@@ -50,12 +50,13 @@ public class FilmListingServiceImpl implements FilmListingService {
     {
         Mono<List<FilmListingDTO>> filmPayload = webClient.get().
                 uri("/discover/movie?include_adult=false&include_video=false&language=en-US&page=2&sort_by=popularity.desc&year=2023").
-                headers(httpHeaders -> httpHeaders.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlMGJmMGIyOWQ0MDc2NDI3NTAwZmNhYjY2NDgxMmM5ZSIsInN1YiI6IjY1YWU5YzlhMjVjZDg1MDEwYTZlOThjNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.XIBQzAB0rmQppNZo2uDDOavgmjMyZ2RB21aZajPjO68")).
+                headers(httpHeaders -> httpHeaders.setBearerAuth("eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5OTI4Y2I0Mzk4MmUyZDFkMmRhNzMzYWExZmQ4ZTU2NiIsInN1YiI6IjY1YWU5YzlhMjVjZDg1MDEwYTZlOThjNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VQyEaQg1Z97qABCDkaz4e2U9g-jse7MdftE7VeFNpvE")).
                 retrieve().
                 bodyToMono(PaginatedFilmListingDTO.class).
                 map(PaginatedFilmListingDTO::getResults);
         List<FilmListingDTO> objects = filmPayload.block();
         for (FilmListingDTO film: objects){System.out.println(film.getFilmName()); saveNewFilm(film);}
+        for (Films films: filmListingRepository.findAll()){System.out.print(films.getFilmName() + " ");}
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        List<Films> filmsList = Arrays.stream(objects).map()
 //        System.out.println(objects.stream().map(Films::getFilmName).collect(Collectors.toList()));

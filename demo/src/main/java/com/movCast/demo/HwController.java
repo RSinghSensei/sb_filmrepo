@@ -7,6 +7,8 @@ import com.movCast.demo.service.FilmService;
 import com.movCast.demo.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -120,9 +122,10 @@ public class HwController {
     }
 
     @GetMapping(path = "/viewFilmsFromAPI")
-    public void listFilmsFromAPI()
+    public ResponseEntity<String> listFilmsFromAPI()
     {
-        filmListingService.addNewFilmFromAPI();
+        Iterable<FilmListingDTO> testCase = filmListingService.getAllFilms();
+        return new ResponseEntity<String>("New Films Added to DB", HttpStatus.OK);
     }
 
 }

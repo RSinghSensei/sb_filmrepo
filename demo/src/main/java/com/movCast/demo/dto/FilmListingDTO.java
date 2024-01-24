@@ -30,6 +30,10 @@ public class FilmListingDTO {
         this.userList = userList;
     }
 
+    public FilmListingDTO(String filmName) {
+        this.filmName = filmName;
+    }
+
     public FilmListingDTO() {
     }
 }
