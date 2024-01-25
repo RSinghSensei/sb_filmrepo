@@ -9,6 +9,10 @@ public class UserDTO {
 
     public UserDTO() {}
 
+    public UserDTO(String userName) {
+        this.userName = userName;
+    }
+
     public String getUserName() {
         return userName;
     }
